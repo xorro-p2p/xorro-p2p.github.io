@@ -8,7 +8,7 @@ title: Xorro P2P
   <li>Introduction</li>
   <li>Project Overview</li>
   <li>Selecting Features</li>
-  <li>Demo Video</li>
+  <li>Demo</li>
   <li>Implementing a Distributed Hash Table</li>
   <li>Development Strategy</li>
   <li>Limitations and Next Steps</li>
@@ -23,6 +23,9 @@ title: Xorro P2P
 
 <h2>Project Overview/Challenges</h2>
   <h3>Research Phase</h3>
+  <p>As strictly end users of P2P systems like BitTorrent, there was a lot of research needed to understand what was going on under the hood of these systems.</p>
+  <p>[ADD MORE HERE]</p>
+  <p><a href="resources/">Check out our resources section</a> if you would like to see the information uncovered while doing research.</p>
   <h3>Kademlia Implementation</h3>
   <h3>Simulating and Scaling a Network Application</h3>
   <h3>Working with a Remote Team</h3>
@@ -30,31 +33,78 @@ title: Xorro P2P
 <hr />
 
 <h2>Selecting Features</h2>
-  <h3>History of P2P Systems</h3>
+  <h3>A Brief History of P2P Systems</h3>
+  <p>To talk about one of the earlier well-known P2P systems, we have to go back to the years 1999 - 2000 when Napster was very popular. For those of you who haven’t heard of it, Napster was a file sharing service that was mostly used to transfer music files. It’s estimated that there were about 80 million registered users at its peak.</p>
+  <img src="public/images/centralized_system.png" alt="Napster centralized system">
+  <p>Napster worked by having all nodes connect to a central index server that contained all the information about who was in possession of which files. If you wanted to search for a file, a query was sent to the central server and that server would return a list of matches. You would then retrieve the file from one of the matches.</p>
+  <p>Due to its centralized nature, Napster was vulnerable to attacks and lawsuits and Napster was shut down by court order after about 2 years of service.</p>
+  <p>In addition to those vulnerabilities, the central index meant there was a single point of failure, as well as a lack of scalability.</p>
+
+  <p>The next generation of P2P networks, such as BitTorrent, Gnutella and Freenet, are able to escape the same fate as Napster by moving to a distributed model.</p>
+  <img src="public/images/distributed_system.png" alt="BitTorrent decentralized system">
+  <p>In a decentralized system like BitTorrent, every computer or as we call it, node, acts as a client and server. Nodes can find out about the locations of files through other nodes, removing the reliance on a central server.</p>
+
   <h3>BitTorrent Key Features</h3>
+  <p>So as we set out to build Xorro, we spent a lot of time reading white papers about existing P2P systems and the underlying technologies they employed. Ultimately we zeroed in on this set of features found in BitTorrent as the model for the first version of our application.</p>
     <h4>Distributed Hash Table</h4>
+    <p>First, we needed ways to discover peer nodes and how to route messages to them. A distributed hash table provides those capabilities, and Kademlia is the specific protocol that BitTorrent uses.</p>
     <h4>File Sharding</h4>
+    <p>We also wanted to be able to shard files into smaller chunks, so that once a file has been distributed amongst peers, those peers can provide smaller pieces of the file when it is requested again, spreading the load.</p>
     <h4>Nodes that act as both clients and servers</h4>
+    <p>The third feature is having our node act as both a client and a server, possessing the ability to communicate with other nodes in the network.</p>
 <hr />
 
-<h2>Demo Video</h2>
+<h2>Demo</h2>
+<p>Before we get into the implementation details of Xorro P2P, check out this graphic that illustrates the file downloading process in action. The file shards are downloaded separately and then reassembled into the final file.</p>
 <img src="public/images/xorrolores.gif" alt="Retrieving a file from the Xorro P2P Network">
 <hr />
 
 <h2>Implementing a Distributed Hash Table</h2>
+  <p>[Problem setup here: We selected Kademlia as the DHT to use; why did we choose Kademlia?]</p>
+
   <h3>The Kademlia Protocol</h3>
+  <p>The Kademlia protocol defines the structure of a network. We'll begin our explanation with a diagram of a Kademlia node to illustrate that structure.</p>
+  <img src="public/images/kademlia_node_structure.png" alt="BitTorrent decentralized system">
+  <h4>Keyspace Partitioning</h4>
+  <p>The foundation of a Kademlia DHT is an abstract keyspace, which is a set of 160-bit numbers in the case of BitTorrent. Keyspace partitioning is the splitting of ownership amongst participating nodes. In practice, each node is assigned a random 160-bit string ID upon joining a network.</p>
+  <h4>Overlay Network</h4>
+  <p>Each node also maintains a set of links to other nodes. Together these links form an overlay network. In our app, this set of links is referred to as the routing table. Each routing table is divided into buckets, with each bucket containing a list of contacts. Each contact contains information about a specific node, such as the ID, IP, and port.</p>
+  <p>Contacts are organized by closeness to a given ID. We'll talk about this in detail in upcoming sections.</p>
+  <h4>Hash Table</h4>
+  <p>A node also has a hash table that stores additional information. Because this is a file sharing application, the hash table will contain a file ID as the key and the location of the file as a value. This effectively makes the node a source for a file. We call the hash table a DHT segment in our application.</p>
+  <h4>Consistent Hashing</h4>
+  <p>Another feature is consistent hashing, where we hash the file data to generate an ID that is the same format as the node ID.</p>
+
   <h3>Finding Peers and Files</h3>
   <h3>Calculating Closeness</h3>
   <h3>Xor Distance Code Examples</h3>
   <h3>Node Communications</h3>
+  <p>Now that we’ve covered the basic structure and organization of the network, we’ll move onto node communications. What types of messages do nodes send to each other?</p>
+  <p>In Kademlia, there are four remote procedure calls. An RPC is a kind of request-response protocol that allows nodes to send messages to each other.</p>
+
     <h4>Ping</h4>
+    <p>The first RPC is ping, which is used to verify that a node is still alive. If alive, both nodes insert contact info into their own routing tables.</p>
     <h4>Find node</h4>
+    <p>The second RPC is find_node. The recipient node looks in its own routing table and returns the K contacts that are closest to the requesting node’s ID.</p>
     <h4>Find value</h4>
+    <p>The third RPC is find_value. In this case, the query is a file ID. The receiving node looks in its own DHT segment hash and returns a URL if the key is found. If not, the recipient node returns a list of K contacts that are closest to the file ID.</p>
     <h4>Store</h4>
+    <p>The last RPC is store. This stores the key, value pair, which is the file ID and URL in our case, into the DHT segment of the recipient node.</p>
+
+    <p>Upon a successful communication for each RPC, both the sending and receiving node insert each other’s contact info into their routing tables, or update that contact’s last_seen property.</p>
 
 <hr />
 
 <h2>File Sharding</h2>
+<p>Earlier on this page, we mentioned that file sharding is a BitTorrent feature we wanted to include in our application.</p>
+<p>The reasons for this include improved distribution and reliability. Multiple users store shards of the files so that if a node containing download information for a shard goes offline, the shard info can be retrieved from a different source.</p>
+<p>File sharding also saves bandwidth, where the load of sharing potentially large files is distributed amongst many nodes.</p>
+<p>Implementation-wise, upon upload a file is broken into smaller files called “pieces”. A manifest file is then created which keeps a record of all the pieces needed to reassemble a file.</p>
+<img src="public/images/file_sharding.png" alt="File sharding">
+<p>When we upload a file, we create an ID for it by hashing the file’s content. This ID is also used as the filename for the manifest. Users don’t need to know about the manifest and can just search by the original file’s ID.</p>
+<p>The .xro extension is added so that we can distinguish between manifest and shard files in our system.</p>
+<p>Here we have the contents of a manifest which includes the original file name, the length of the file in bytes and an array containing all of the pieces in sequential order. The ID of each piece is generated by hashing the piece’s contents.</p>
+<img src="public/images/manifest_file.png" alt="File sharding">
 
 <hr>
 
