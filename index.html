@@ -19,9 +19,6 @@ title: Xorro P2P
 <h2>Introduction</h2>
   <h3>What is Xorro P2P?</h3>
   <p>Xorro P2P is a mini BitTorrent peer-to-peer network built by a trio of developers.</p>
-  <h3>Why did we build Xorro P2P?</h3>
-  <p>Our team was interested in P2P networks and distributed systems and wanted to build one from scratch.</p>
-
 <hr />
 
 <h2>Project Overview/Challenges</h2>
@@ -35,10 +32,9 @@ title: Xorro P2P
 <h2>Selecting Features</h2>
   <h3>History of P2P Systems</h3>
   <h3>BitTorrent Key Features</h3>
-    <h4>Nodes that act as both clients and servers</h4>
     <h4>Distributed Hash Table</h4>
     <h4>File Sharding</h4>
-
+    <h4>Nodes that act as both clients and servers</h4>
 <hr />
 
 <h2>Demo Video</h2>
@@ -58,23 +54,80 @@ title: Xorro P2P
 
 <hr />
 
+<h2>File Sharding</h2>
+
+<hr>
+
 <h2>Development Strategy: Simulating and Scaling a Network Application From a Local Environment to a Real Network</h2>
   <h3>Phase 1: Test Mode</h3>
+
+  <p>So.. how did we go about building and testing this?</p>
+  <p>
+    In the early stages of our project, we needed to test inter-node communications, but all we had were our classes and test suites, there was no network, no RPC transport, not even multiple computers.
+  </p>
+  <p>
+    We could have had one node call methods directly on another node object, but this would have broken down quickly once a true network environment was introduced and those objects weren’t directly available.
+  </p>
+  <p>
+     We needed some sort of proxy object that would function one way during testing and local development, and another way when deployed onto a real network environment.
+  </p>
+  
+  <p>Our solution was to have individual nodes delegate all network communications to a pre-existing Network Adapter object.</p>
+
+  <p>When testing, this Network Adapter would actually be a ‘Fake Network Adapter’ -- essentially an array of other nodes, with some methods for lookup and RPC proxy. This allowed us to test our node interactions in a local sandbox without an RPC transport protocol.</p>
+
+  <p>The typical workflow would look something like the diagram below.<p>
+  <img src="public/images/strategy1.png" alt="">
+  
+  <ul>
+    <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - IP, IP and Port.</li>
+    <li>Network looks up if Node B exists. -- in Fake network environment this is done by ID from contact.</li>
+    <li>Network directly calls method on Node B, which changes state and/or returns some data in response.</li>
+    <li>Network delivers that response back to Node A, which in turn changes state or reacts to this new information</li>
+  </ul>
+    
   <h3>Phase 2: RPC via HTTP in a Local Sandbox</h3>
+  <p>Our next step was to introduce HTTP as the underlying protocol upon which we built our RPC methods.</p>
+  <p>To do this, we implemented a Real Network Adapter object. It has the same interface as our Fake Network Adapter, but instead of looking up the recipient node by ID and calling the method directly, the Real Network Adapter crafts an HTTP Post request from the IP/Port listed in the contact info provided, and the route corresponding to the RPC call, possibly including relevant data in the request body -- contact info of the requester, query info, etc.<p>
+
+
+  <p>The typical workflow is similar to the previous slide:</p>
+  <img src="public/images/strategy2.png" alt="">
+  <ul>
+    <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - IP, IP and Port.</li>
+    <li>Network crafts an HTTP POST request for the IP, PORT, and RPC path, and sends it along with any payload data</li>
+    <li>HTTP endpoint of recipient node receives POST request, and it calls the receive rpc method on the Node object</li>
+    <li>The return value of this recieve RPC method is converted to an HTTP response by the HTTP endpoint, and sent back to the network adapter of the calling Node</li>
+    <li>The Network receives the response, and delivers it to Node A, which in turn changes state or reacts to this new information.</li>
+  </ul>
+  <p>As you can see, from the perspective of the Nodes, nothing has changed, each of them send and receive the same information, but the Network Object and HTTP endpoints abstract away the internode communications.</p>
+
   <h3>Phase 3: RPC/HTTP Over the Internet</h3>
   <h3>Flexible Node Instantiation</h3>
   <h3>Launch Scripts</h3>
-  <h3>File Sharding</h3>
+  <h3>System Architecture</h3>
+  <p>Our final system architecture looks like this:</p>
+  <img src="public/images/system_arch.png" alt="">
+  <p>The top level object is XorroNode, which is a modular Sinatra application</p>
+  <p>Each XorroNode contains:</p>
+  <ul>
+    <li>
+      a single Kademlia Node, responsible for maintaining its own routing table and DHT
+    </li>
+    <li>A network adapter for initiating RPC calls to other nodes.</li>
+    <li>A Sinatra endpoint for receiving RPC from other nodes, web UI, and file transport.</li>
+    <li>File Utilities for file ingest, sharding, and manifest creation.</li>
+  </ul>
 
 <hr />
 
 <h2>Limitations and Next Steps</h2>
-  <h3>TCP Implementation</h3>
-  <h3>Parallelism in RPCs and File Retrieval</h3>
-  <h3>Asynchrony and Timeouts</h3>
-  <h3>Exception Handling and Retries</h3>
-  <h3>Moving File Operations to a Separate Utility</h3>
-  <h3>Command Line Interface</h3>
+<h3>TCP Implementation</h3>
+<h3>Parallelism in RPCs and File Retrieval</h3>
+<h3>Asynchrony and Timeouts</h3>
+<h3>Exception Handling and Retries</h3>
+<h3>Moving File Operations to a Separate Utility</h3>
+<h3>Command Line Interface</h3>
 
 
 
