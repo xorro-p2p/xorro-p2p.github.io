@@ -1,0 +1,15 @@
+<h2>Implementing a Distributed Hash Table</h2>
+  <p>[Problem setup here: We selected Kademlia as the DHT to use; why did we choose Kademlia?]</p>
+
+  <h3>The Kademlia Protocol</h3>
+  <p>The Kademlia protocol defines the structure of a network. We'll begin our explanation with a diagram of a Kademlia node to illustrate that structure.</p>
+  <img src="public/images/kademlia_node_structure.png" alt="BitTorrent decentralized system">
+  <h4>Keyspace Partitioning</h4>
+  <p>The foundation of a Kademlia DHT is an abstract keyspace, which is a set of 160-bit numbers in the case of BitTorrent. Keyspace partitioning is the splitting of ownership amongst participating nodes. In practice, each node is assigned a random 160-bit string ID upon joining a network.</p>
+  <h4>Overlay Network</h4>
+  <p>Each node also maintains a set of links to other nodes. Together these links form an overlay network. In our app, this set of links is referred to as the routing table. Each routing table is divided into buckets, with each bucket containing a list of contacts. Each contact contains information about a specific node, such as the ID, IP, and port.</p>
+  <p>Contacts are organized by closeness to a given ID. We'll talk about this in detail in upcoming sections.</p>
+  <h4>Hash Table</h4>
+  <p>A node also has a hash table that stores additional information. Because this is a file sharing application, the hash table will contain a file ID as the key and the location of the file as a value. This effectively makes the node a source for a file. We call the hash table a DHT segment in our application.</p>
+  <h4>Consistent Hashing</h4>
+  <p>Another feature is consistent hashing, where we hash the file data to generate an ID that is the same format as the node ID.</p>

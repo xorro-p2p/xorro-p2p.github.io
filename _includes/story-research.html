@@ -1,0 +1,19 @@
+<h2>Project Overview/Challenges</h2>
+  <h3>Research Phase</h3>
+  <p>As strictly end users of P2P systems like BitTorrent, there was a lot of research needed to understand what was going on under the hood of these systems. This phase started by reading about old and current P2P networks like Napster, Gnutella, Freenet and BitTorrent.</p>
+ 
+  <p>Going down that path led us to investigating common features more deeply. Luckily P2P networks have been around for a while so there were many resources available. White papers about distributed hash tables (DHTs) proved to be the most critical, as DHTs are the foundation of current P2P networks. Countless hours were spent reading and digesting these white papers and we made sure to have a good understanding of DHTs before we started any coding.</p>
+   
+  <p>In addition to white papers, we relied on specification documents, various blog posts and StackOverflow answers.</p>
+
+  <p><a href="resources/">Check out our resources section</a> if you would like to see the information uncovered while doing research.</p>
+
+  <h3>Kademlia Implementation</h3>
+  <p>The next step was implementing the Kademlia protocol. Kademlia is the distributed hash table used by most P2P systems today, such as BitTorrent and Freenet. We compared other DHT protocols, such as Chord and Pastry, but decided on Kademlia due to its prevalence, as well as other advantages we’ll cover later on.</p>
+ 
+  <p>This step proved to be one of the most challenging parts because there were a lot of new concepts to cover. Nodes, routing tables, buckets, xor distance, routing algorithms, remote procedure calls… the list seemed endless. There were a few Ruby implementations out there, but we relied only on specifications and white papers because we truly wanted to build out the DHT from scratch.</p>
+
+  <h3>Simulating and Scaling a Network Application</h3>
+
+  <h3>Working with a Remote Team</h3>
+  <p>Another challenge we had to overcome was a geographic one. Our team of three spanned across three time zones, with the greatest difference being 15 hours. We dedicated a significant amount of time to meet and do pair (or triple) programming.</p>
