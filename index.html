@@ -191,11 +191,11 @@ Following is the step you might do:</p>
 
   <p>At this point we realized there were a number of different node configurations/environments that we needed to be able to support and test.  Furthermore we needed a way to move between these configurations quicky and seamlessly</p>
 
-  <p>Each node needs to broadcast what IP/port it is accessible on, and the full url/path to each shard or manifest it hosts.</p>
+  <p>In each environment, a node broadcasts its IP/port, and the full url/path to each shard or manifest it hosts.</p>
   <ul>
     <li>If a node is directly on the internet, it should broadcast its own public IP port.</li>
+    <li>If a node a node has a fully qualified domain name, the node should broadcast that instead of a numeric IP address.</li>
     <li>If a node is behind a firewall that is configured properly for NAT translation/and port forwarding, it can still rely on its public IP and port.</li>
-    <li>If a node a node has a fully qualified domain name, the node should be aware of it.</li>
     <li>If a node is behind a firewall that does not have ports forwarded, it needs to either:
       <ul>
         <li>
@@ -207,8 +207,10 @@ Following is the step you might do:</p>
       </ul>
   </ul>
 
-  
-  
+  <p>We identified a number of configuration variables that a node might have, and created environtment variables to represent these options.  Our node instantiation code reacts to these environment variables, and we crafted a series of BASH scripts to standardize these configurations for each environment we were working in: test, local, lan, WAN, etc.</p>
+
+  <img src="public/images/launch_scripts.png" alt="">
+
   <h3>System Architecture</h3>
   <p>Our final system architecture looks like this:</p>
   <img src="public/images/system_arch.png" alt="">
@@ -225,7 +227,7 @@ Following is the step you might do:</p>
 
 <hr />
 
-<h2>Limitations and Next Steps</h2>
+<h2>Future Work</h2>
 <h3>TCP Implementation</h3>
 <h3>Parallelism in RPCs and File Retrieval</h3>
 <h3>Asynchrony and Timeouts</h3>
