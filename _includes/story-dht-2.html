@@ -1,0 +1,42 @@
+<h3>Finding Peers and Files</h3>
+  <p>How do we find peers or file in the network?</p>
+  <p>Here we take a real life example to help you understand how Kademlia do it. If you want to find a people you don't know, what will you do?
+Following is the step you might do:</p>
+
+  <ol>
+  <li>You ask your friends who are <b>more related to</b> the person you want to find.</li>
+  <p>It is very lucky if your friend know that people, what if they don't?</p>
+  <li>Those friend will give you some contact informations that are <b>more related</b> to the target</li>
+  <li>And from those info you get from your friend, you will ask them same problem again: Do you know the person I want to find?</li>
+  </ol>
+  <p>In general, the journey to find a target is not just one step, you have to do the process of searching more closer people <b>over and over again</b> to finally reach of the target. That's easy right? Kademlia is doing the same thing!!</p> <p>
+  The contact list in real life is the routing table in Kademlia, the meaning of closeness between the relationship in real life is the same with the closeness of nodes in Kademlia</p>
+  <p>Now there is the next problem comes, how is the closeness determined in the Kademlia?</p>
+  <h3>Calculating Closeness</h3>
+    <p>Kademlia defines the distance between nodes as their bitwise exclusive or(XOR) interpreted as an integer. The basics of the xor operation is comparing two inputs and then outputs their difference where the input are the same, place a false(0 in bit) and where the input are different, place a true(1 in bit).</p>
+
+    <p>The diagram take our node id is 11 in the network bit-length = 4 for example.<p>
+    <p>In order to get the xor result, simply compare the numbers in bits individually and in order.</p>
+    <p>In first case, node id we compare with is 10, first three bits are same with our id and last bit is different gives us the result is 0001, and 1 in decimal</p>
+    <p>Next example 12, the first input is the same and the others are different, gives us the result is 7</p>
+    <p>Last node's id is 4, all bits are different, give us the result is 1111, 15 in decimal.</p>
+
+    <p>From these results you'll notice a important feature of a xor metric in Kademlia is:</p>
+    <p>If a node’s id shares <b>more bit pre-fix</b> with ours, the result is smaller, which means if we apply the xor operation to determine the closeness, the smaller result gives us the distance between these two node is closer.</p>
+    <img src="public/images/xor_distance.png" alt="XOR distance">
+  <h3>Xor Distance Code Examples</h3>
+    <img src="public/images/xor_code_example.png" alt="XOR distance code example">
+  <h3>Node Communications</h3>
+  <p>Now that we’ve covered the basic structure and organization of the network, we’ll move onto node communications. What types of messages do nodes send to each other?</p>
+  <p>In Kademlia, there are four remote procedure calls. An RPC is a kind of request-response protocol that allows nodes to send messages to each other.</p>
+
+    <h4>Ping</h4>
+    <p>The first RPC is ping, which is used to verify that a node is still alive. If alive, both nodes insert contact info into their own routing tables.</p>
+    <h4>Find node</h4>
+    <p>The second RPC is find_node. The recipient node looks in its own routing table and returns the K contacts that are closest to the requesting node’s ID.</p>
+    <h4>Find value</h4>
+    <p>The third RPC is find_value. In this case, the query is a file ID. The receiving node looks in its own DHT segment hash and returns a URL if the key is found. If not, the recipient node returns a list of K contacts that are closest to the file ID.</p>
+    <h4>Store</h4>
+    <p>The last RPC is store. This stores the key, value pair, which is the file ID and URL in our case, into the DHT segment of the recipient node.</p>
+
+    <p>Upon a successful communication for each RPC, both the sending and receiving node insert each other’s contact info into their routing tables, or update that contact’s last_seen property.</p>
