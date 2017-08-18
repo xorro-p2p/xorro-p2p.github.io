@@ -6,13 +6,13 @@
     In the early stages of our project, we needed to test inter-node communications, but all we had were our classes and test suites, there was no network, no RPC transport, not even multiple computers.
   </p>
   <p>
-    We could have had one node call methods directly on another node object, but this would have broken down quickly once a true network environment was introduced and those objects weren’t directly available.
+    It was fairly common for us to fire up IRB, instantiate a few nodes, and get them communicating manually.  Of course this could be scripted, but it breaks down quickly once a true network environment is introduced and node objects aren't directly available in the same Ruby process.
   </p>
   <p>
-     We needed some sort of proxy object that would function one way during testing and local development, and another way when deployed onto a real network environment.
+     We needed some sort of proxy object that would function one way during testing and local development, and another way when deployed in a real network environment.
   </p>
   
-  <p>Our solution was to have individual nodes delegate all network communications to a pre-existing Network Adapter object.</p>
+  <p>Our solution was to have each node delegate all network communications to a pre-existing Network Adapter object.</p>
 
   <p>When testing, this Network Adapter would actually be a ‘Fake Network Adapter’ -- essentially an array of other nodes, with some methods for lookup and RPC proxy. This allowed us to test our node interactions in a local sandbox without an RPC transport protocol.</p>
 
@@ -45,21 +45,22 @@
   <h3>Phase 3: RPC/HTTP Over the Internet</h3>
 
   <img src="public/images/strategy3.png" alt="">
-  <p>Once we knew that internode communications were working using HTTP in a local environment, or on a LAN, our next step was to deploy onto multiple systems across the internet. This worked fine if the systems were directly on the public internet, or if they were behind firewalls configured with ports already opened up.</p>
+  <p>Once we knew that internode communications were working using HTTP, our next step was to deploy nodes onto multiple systems across the internet. This worked fine if the systems were directly on the public internet, or if they were behind firewalls configured with ports already opened up.</p>
 
   <p>Nodes behind a NAT firewall were another story.  They could join the network fine and retrieve files fine, but without port forwarding, they cannot accept incoming http connections, and thus cannot contribute to the network.</p>
 
-  <p>Long term, a TCP based RPC transport is the goal, as well as support for STUN and TURN servers to handle public IP/port discovery and incoming connections, however, in the scope of this project, we needed a quick way to work around NAT and Firewalls.</p>
+  <p>Long term, a TCP/UDP based RPC and file transport protocol is the goal, as well as support for STUN and TURN servers to handle public IP/port discovery and incoming connections. However, in the scope of this project we needed a quick way to work around NAT and Firewalls.</p>
 
   <p>To do this, we built support for Ngrok, a 3rd party tunneling service, so that nodes behind firewalls could be full functioning members of our network.</p>
 
   <h3>Flexible Node Instantiation and Launch Scripts</h3>
 
-  <p>At this point we realized there were a number of different node configurations/environments that we needed to be able to support and test.  Furthermore we needed a way to move between these configurations quicky and seamlessly</p>
+  <p>We realized that there now was a number of different node configurations/environments that required support and testing.  Furthermore we needed a way to move between these configurations quicky and seamlessly</p>
 
   <p>In each environment, a node broadcasts its IP/port, and the full url/path to each shard or manifest it hosts.</p>
   <ul>
-    <li>If a node is directly on the internet, it should broadcast its own public IP port.</li>
+    <li>If we are working in a local environment only - all nodes broadcast from 'localhost' at different TCP ports.</li>
+    <li>If a node is directly on the internet, it should broadcast its own public IP and port.</li>
     <li>If a node a node has a fully qualified domain name, the node should broadcast that instead of a numeric IP address.</li>
     <li>If a node is behind a firewall that is configured properly for NAT translation/and port forwarding, it can still rely on its public IP and port.</li>
     <li>If a node is behind a firewall that does not have ports forwarded, it needs to either:
