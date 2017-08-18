@@ -24,11 +24,26 @@ Following is the step you might do:</p>
     <p>From these results you'll notice a important feature of a xor metric in Kademlia is:</p>
     <p>If a node’s id shares <b>more bit pre-fix</b> with ours, the result is smaller, which means if we apply the xor operation to determine the closeness, the smaller result gives us the distance between these two node is closer.</p>
     <img src="public/images/xor_distance.png" alt="XOR distance">
+  <h3>Kademlia network and routing table</h3>
+    <p>Here are all possible nodes’ id in the network which bit-length = 4 , from 0 to 15, list in order</p>
+    <p>Each nodes in the Kademlia can be treated as leaves in a binary tree, step to the left at a vertex point adds a zero bit to the start of the number and a step to the right adds a 1</p>
+    <p>The most important feature of a binary tree related to the network is, time complexity of searching a value in a tree is O(log n). If we want to look up a node or file in this network, it’s very efficient to find it.</p>
+    <p>We know closeness of node can be easily determined by the common prefix using xor metric, it is easy to solve how contacts are categorized into different group in a routing table.</p>
+    <img src="public/images/kademlia_tree_structure.png" alt="Tree structure of the network">
+    <p>The way you categorized your friends into different groups based on their field of industry can be applied to how we categorized contacts, here we use the shared bit to sort the contacts into node's routing table.</p>
+    <img src="public/images/kademlia_routing_table_in_tree.png" alt="Categorized of contacts in tree">
+
   <h3>Xor Distance Code Examples</h3>
+    <p>Now we have the basic understanding of how a closeness is determined, we can show how we implement distance and shared bit length in ruby</p>
+    <p>In ruby, we can easily calculate xor by using caret symbol, like first method shows in the code snippet</p>
+    <p>Second method is how we implement the shared prefix length to determine distance between two node.</p>
+    <p>Calculate the distance using method xor_distance, and determine the shared prefix length by subtract the bit-length to the length of string of the xor result in base2, remember the example we have before, distance of 11 and 10 in bit-length is 4 is 0001, which is 1, stringify in base 2 give us ‘1’ with leading 0 will be trimmed,  size of the string ‘1’ is 1, give use 4 - 1 = 3</p>
+    <p>Last code snippet is the test case with many different situations, include shared bit-length range from 160 to 0</p>
     <img src="public/images/xor_code_example.png" alt="XOR distance code example">
   <h3>Node Communications</h3>
   <p>Now that we’ve covered the basic structure and organization of the network, we’ll move onto node communications. What types of messages do nodes send to each other?</p>
   <p>In Kademlia, there are four remote procedure calls. An RPC is a kind of request-response protocol that allows nodes to send messages to each other.</p>
+
 
     <h4>Ping</h4>
     <p>The first RPC is ping, which is used to verify that a node is still alive. If alive, both nodes insert contact info into their own routing tables.</p>
