@@ -12,7 +12,7 @@ Following is the step you might do:</p>
   <p>In general, the journey to find a target is not just one step, you have to do the process of searching more closer people <b>over and over again</b> to finally reach of the target. That's easy right? Kademlia is doing the same thing!!</p> <p>
   The contact list in real life is the routing table in Kademlia, the meaning of closeness between the relationship in real life is the same with the closeness of nodes in Kademlia</p>
   <p>Now there is the next problem comes, how is the closeness determined in the Kademlia?</p>
-  <h3>Calculating Closeness</h3>
+  <h3>Calculat Closeness</h3>
     <p>Kademlia defines the distance between nodes as their bitwise exclusive or(XOR) interpreted as an integer. The basics of the xor operation is comparing two inputs and then outputs their difference where the input are the same, place a false(0 in bit) and where the input are different, place a true(1 in bit).</p>
 
     <p>The diagram take our node id is 11 in the network bit-length = 4 for example.<p>
@@ -29,7 +29,7 @@ Following is the step you might do:</p>
     <p>Each nodes in the Kademlia can be treated as leaves in a binary tree, step to the left at a vertex point adds a zero bit to the start of the number and a step to the right adds a 1</p>
     <p>The most important feature of a binary tree related to the network is, time complexity of searching a value in a tree is O(log n). If we want to look up a node or file in this network, it’s very efficient to find it.</p>
     <p>We know closeness of node can be easily determined by the common prefix using xor metric, it is easy to solve how contacts are categorized into different group in a routing table.</p>
-    <img src="public/images/kademlia_tree_structure.png" alt="Tree structure of the network">
+    <img src="public/images/kademlia_network_structure.png" alt="Tree structure of the network">
     <p>The way you categorized your friends into different groups based on their field of industry can be applied to how we categorized contacts, here we use the shared bit to sort the contacts into node's routing table.</p>
     <img src="public/images/kademlia_routing_table_in_tree.png" alt="Categorized of contacts in tree">
 
