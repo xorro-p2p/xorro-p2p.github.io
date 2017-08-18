@@ -1,5 +1,6 @@
 <h2>Implementing a Distributed Hash Table</h2>
-  <p>[Problem setup here: We selected Kademlia as the DHT to use; why did we choose Kademlia?]</p>
+  <p>After conducting research, our next step was implementing the Kademlia protocol. Kademlia is the distributed hash table used by most P2P systems today, such as BitTorrent and Freenet. We compared other DHT protocols, such as Chord and Pastry, but decided on Kademlia due to its prevalence, as well as other advantages we’ll cover later on.</p>
+  <p>This step proved to be one of the most challenging parts because there were a lot of new concepts to cover. Nodes, routing tables, buckets, xor distance, routing algorithms, remote procedure calls… the list seemed endless. There were a few Ruby implementations out there, but we relied only on specifications and white papers because we truly wanted to build out the DHT from scratch.</p>
 
   <h3>The Kademlia Protocol</h3>
   <p>The Kademlia protocol defines the structure of a network. We'll begin our explanation with a diagram of a Kademlia node to illustrate that structure.</p>

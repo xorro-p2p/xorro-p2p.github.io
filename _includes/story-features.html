@@ -1,20 +1,12 @@
 <h2>Selecting Features</h2>
-  <h3>A Brief History of P2P Systems</h3>
-  <p>To talk about one of the earlier well-known P2P systems, we have to go back to the years 1999 - 2000 when Napster was very popular. For those of you who haven’t heard of it, Napster was a file sharing service that was mostly used to transfer music files. It’s estimated that there were about 80 million registered users at its peak.</p>
-  <img src="public/images/centralized_system.png" alt="Napster centralized system">
-  <p>Napster worked by having all nodes connect to a central index server that contained all the information about who was in possession of which files. If you wanted to search for a file, a query was sent to the central server and that server would return a list of matches. You would then retrieve the file from one of the matches.</p>
-  <p>Due to its centralized nature, Napster was vulnerable to attacks and lawsuits and Napster was shut down by court order after about 2 years of service.</p>
-  <p>In addition to those vulnerabilities, the central index meant there was a single point of failure, as well as a lack of scalability.</p>
-
-  <p>The next generation of P2P networks, such as BitTorrent, Gnutella and Freenet, are able to escape the same fate as Napster by moving to a distributed model.</p>
-  <img src="public/images/distributed_system.png" alt="BitTorrent decentralized system">
-  <p>In a decentralized system like BitTorrent, every computer or as we call it, node, acts as a client and server. Nodes can find out about the locations of files through other nodes, removing the reliance on a central server.</p>
+  
 
   <h3>BitTorrent Key Features</h3>
-  <p>So as we set out to build Xorro, we spent a lot of time reading white papers about existing P2P systems and the underlying technologies they employed. Ultimately we zeroed in on this set of features found in BitTorrent as the model for the first version of our application.</p>
-    <h4>Distributed Hash Table</h4>
-    <p>First, we needed ways to discover peer nodes and how to route messages to them. A distributed hash table provides those capabilities, and Kademlia is the specific protocol that BitTorrent uses.</p>
-    <h4>File Sharding</h4>
-    <p>We also wanted to be able to shard files into smaller chunks, so that once a file has been distributed amongst peers, those peers can provide smaller pieces of the file when it is requested again, spreading the load.</p>
-    <h4>Nodes that act as both clients and servers</h4>
-    <p>The third feature is having our node act as both a client and a server, possessing the ability to communicate with other nodes in the network.</p>
+  <p>After comparing P2P networks, we ultimately zeroed in on this set of features found in BitTorrent as the model for the first version of our application. Each of these features will be described in detail further on.</p>
+  <p>
+    <ul>
+      <li>Distributed Hash Table</li>
+      <li>File Sharding</li>
+      <li>Nodes that act as both clients and servers</li>
+    </ul>
+  </p>
