@@ -1,7 +1,10 @@
 <h2>Future Work</h2>
-<h3>TCP Implementation</h3>
-<h3>Parallelism in RPCs and File Retrieval</h3>
-<h3>Asynchrony and Timeouts</h3>
-<h3>Exception Handling and Retries</h3>
-<h3>Moving File Operations to a Separate Utility</h3>
-<h3>Command Line Interface</h3>
+<p>While Xorro P2P's Alpha release is functional P2P software, there are still many improvements we want to make!  Below are some of our plans..</p>
+
+<h3>Replace HTTP with TCP/UDP based RPC and File transport</h3>
+<p>Using HTTP for RPC and file transport allowed us to leverage pre-existing tooling, and focus our development efforts on problems more specific to the Kademlia DHT. However, a TCP/UDP based approach would allow us to reduce overhead, as well as work towards solving NAT traversal issues.</p>
+
+<h3>File Submission Outside of Web UI</h3>
+<p>We really like our web UI, but the current workflow for adding a file to the network could use some work.</p>
+<p>Files shared onto the Xorro network are added to a node via browser drag & drop, which is a bit limiting. The browser must submit a POST request to an HTTP route on the local machine with all of the file data in the request body.  The local HTTP server receives the data, writes it out, then shards it.</p>
+<p>We plan on re-architecting this workflow so that files can be manually added to a local folder, and the sharding/sharing process is kicked off automatically. Furthermore, a native client application or command line tool would further help to streamline file ingest and retrieval.</p>
