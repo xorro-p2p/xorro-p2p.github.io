@@ -177,8 +177,40 @@ Following is the step you might do:</p>
   <p>As you can see, from the perspective of the Nodes, nothing has changed, each of them send and receive the same information, but the Network Object and HTTP endpoints abstract away the internode communications.</p>
 
   <h3>Phase 3: RPC/HTTP Over the Internet</h3>
-  <h3>Flexible Node Instantiation</h3>
-  <h3>Launch Scripts</h3>
+
+  <img src="public/images/strategy3.png" alt="">
+  <p>Once we knew that internode communications were working using HTTP in a local environment, or on a LAN, our next step was to deploy onto multiple systems across the internet. This worked fine if the systems were directly on the public internet, or if they were behind firewalls configured with ports already opened up.</p>
+
+  <p>Nodes behind a NAT firewall were another story.  They could join the network fine and retrieve files fine, but without port forwarding, they cannot accept incoming http connections, and thus cannot contribute to the network.</p>
+
+  <p>Long term, a TCP based RPC transport is the goal, as well as support for STUN and TURN servers to handle public IP/port discovery and incoming connections, however, in the scope of this project, we needed a quick way to work around NAT and Firewalls.</p>
+
+  <p>To do this, we built support for Ngrok, a 3rd party tunneling service, so that nodes behind firewalls could be full functioning members of our network.</p>
+
+  <h3>Flexible Node Instantiation and Launch Scripts</h3>
+
+  <p>At this point we realized there were a number of different node configurations/environments that we needed to be able to support and test.  Furthermore we needed a way to move between these configurations quicky and seamlessly</p>
+
+  <p>In each environment, a node broadcasts its IP/port, and the full url/path to each shard or manifest it hosts.</p>
+  <ul>
+    <li>If a node is directly on the internet, it should broadcast its own public IP port.</li>
+    <li>If a node a node has a fully qualified domain name, the node should broadcast that instead of a numeric IP address.</li>
+    <li>If a node is behind a firewall that is configured properly for NAT translation/and port forwarding, it can still rely on its public IP and port.</li>
+    <li>If a node is behind a firewall that does not have ports forwarded, it needs to either:
+      <ul>
+        <li>
+          Establish a tunnel to Ngrok’s servers, and be aware of its unique Ngrok address so it can advertise this to other nodes,
+        </li>
+        <li>
+          Know that it is a "Leech" node, and not broadcast location info about any files that it hosts.
+        </li>
+      </ul>
+  </ul>
+
+  <p>We identified a number of configuration variables that a node might have, and created environtment variables to represent these options.  Our node instantiation code reacts to these environment variables, and we crafted a series of BASH scripts to standardize these configurations for each environment we were working in: test, local, lan, WAN, etc.</p>
+
+  <img src="public/images/launch_scripts.png" alt="">
+
   <h3>System Architecture</h3>
   <p>Our final system architecture looks like this:</p>
   <img src="public/images/system_arch.png" alt="">
@@ -195,7 +227,7 @@ Following is the step you might do:</p>
 
 <hr />
 
-<h2>Limitations and Next Steps</h2>
+<h2>Future Work</h2>
 <h3>TCP Implementation</h3>
 <h3>Parallelism in RPCs and File Retrieval</h3>
 <h3>Asynchrony and Timeouts</h3>
