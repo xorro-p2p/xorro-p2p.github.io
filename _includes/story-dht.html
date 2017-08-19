@@ -1,21 +1,25 @@
-<h2>Implementing a Distributed Hash Table</h2>
-  <p>After conducting research, our next step was implementing the Kademlia protocol. Kademlia is the distributed hash table used by most P2P systems today, such as BitTorrent and Freenet. We compared other DHT protocols, such as Chord and Pastry, but decided on Kademlia due to its prevalence, as well as other advantages we’ll cover later on.</p>
-  <p>This step proved to be one of the most challenging parts because there were a lot of new concepts to cover. Nodes, routing tables, buckets, xor distance, routing algorithms, remote procedure calls… the list seemed endless. There were a few Ruby implementations out there, but we relied only on specifications and white papers because we truly wanted to build out the DHT from scratch.</p>
+<h2 id='dht'>Implementing a Distributed Hash Table</h2>
+  <p>Our research uncovered several distributed hash table models to consider for our application: Chord, Pastry, Apache Cassandra, Kademlia... each with their own pros and cons. We ultimately decided on Kademlia due to its prevalence, minimal RPC, automatic spreading of contact information, among other reasons we will outline shortly.  </p>
 
-  <h3>The Kademlia Protocol</h3>
-  <p>The Kademlia protocol defines the structure of a network. Here is a diagram of a Kademlia node to illustrate that structure.</p>
+  <p>Implementation of Kademlia proved to be quite challenging due to the large quantitiy of new concepts: nodes, routing tables, buckets, xor distance, routing algorithms, remote procedure calls… the list seemed endless. There were a few Ruby implementations out there, but we relied only on specifications and white papers because we truly wanted to build out the DHT from scratch.</p>
+
+  <h3>Kademlia</h3>
+  <p>A Kademlia network consists of many Nodes.<p>
+  <p>Each node:<p>
+  <ul>
+    <li>Has a unique 160 bit ID.</li>
+    <li>Maintains a routing table containing contact information for other nodes.</li>
+    <li>Maintains its own segment of the larger distributed hash table.</li>
+    <li>Communicates with other nodes via 4 remote procedure calls.</li>
+  </ul>
+
+  <p>Each node's routing table is divided into 'buckets' -- each bucket contains contact information for nodes of a specific 'distance' from the current node. We will discuss the concept of distance in more detail shortly.</p>
+
+  <p>Each contact contains the ID, IP address, and port number of the other node.</p>
+
+  <p>Because Xorro is a file sharing application, the DHT segment will contain key/value pairs where each key is a file id, and the corresponding value is the file location.</p>
 
   <figure>
     <img src="public/images/kademlia_node_structure.png" alt="Kademlia node">
     <figcaption>A node as described in the Kademlia specifications</figcaption>
   </figure>
-
-  <h4>Keyspace Partitioning</h4>
-  <p>The foundation of a Kademlia DHT is an abstract keyspace, which is a set of 160-bit numbers in the case of BitTorrent. Keyspace partitioning is the splitting of ownership amongst participating nodes. In practice, each node is assigned a random 160-bit string ID upon joining a network.</p>
-  <h4>Overlay Network</h4>
-  <p>Each node also maintains a set of links to other nodes. Together these links form an overlay network. In our app, this set of links is referred to as the routing table. Each routing table is divided into buckets, with each bucket containing a list of contacts. Each contact contains information about a specific node, such as the ID, IP, and port.</p>
-  <p>Contacts are organized by the closeness to a node's ID. We'll talk about this in detail in upcoming sections.</p>
-  <h4>Hash Table</h4>
-  <p>A node also has a hash table that stores additional information. Because Xorro is a file sharing application, the hash table will contain a file ID as the key and the location of the file as a value. This effectively makes the node a source for a file. We call the hash table a DHT segment in our application.</p>
-  <h4>Consistent Hashing</h4>
-  <p>Another feature is consistent hashing, where we hash the file data to generate an ID that is the same format as the node ID.</p>

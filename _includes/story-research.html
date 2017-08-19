@@ -1,10 +1,10 @@
-<h2>Research Phase</h2>
-  <p>As strictly end users of P2P systems like BitTorrent, there was a lot of research needed to understand what was going on under the hood of these systems. This phase started with reading about old and current P2P networks like Napster, Gnutella, Freenet and BitTorrent.</p>
+<h2 id='research'>Research</h2>
+  <p>As strictly end users of P2P systems, there was much research needed to understand the history and internals of these systems. We collectively read up on P2P networks, old and new: Napster, Gnutella, Freenet, BitTorrent, IPFS...</p>
  
   <h3>Understanding Decentralized Systems</h3>
   <p>The first important concept to understand is the difference between centralized and decentralized systems. A comparison of first and second generation networks helps to illustrate the difference.</p>
 
-  <p>To talk about one of the earlier well-known P2P systems, we have to go back to the years 1999 - 2000 when Napster was very popular. For those of you who haven’t heard of it, Napster was a file sharing service that was mostly used to transfer music files. It’s estimated that there were about 80 million registered users at its peak.</p>
+  <p>To talk about one of the earlier well-known P2P systems, we have to go back to the years 1999 - 2000 when Napster was very popular. Napster was a file sharing service that was mostly used to transfer music files. It’s estimated that there were about 80 million registered users at its peak.</p>
 
   <figure>
     <center><img src="public/images/centralized_system.png" alt="Napster centralized system"></center>
@@ -21,7 +21,7 @@
     <figcaption>An example of a decentralized P2P network</figcaption>
   </figure>
 
-  <p>In a decentralized system like BitTorrent, every computer or as we call it, node, acts as a client and server. Nodes can find out about the locations of files through other nodes, removing the reliance on a central server.</p>
+  <p>In a decentralized system like BitTorrent, every computer/node acts as a client and server, maintaining its own segment of file lookup index. Nodes can find out about the locations of files through other nodes, removing the reliance on a central server.</p>
 
   <h3>Focusing on P2P File Sharing Systems</h3>
   <p>Knowing the advantages of newer P2P systems, we went down the path of investigating their features more deeply. Luckily P2P networks have been around for a while so there were many resources available. White papers about distributed hash tables (DHTs) proved to be the most critical, as DHTs are the foundation of current P2P networks. Countless hours were spent reading and digesting these white papers and we made sure to have a good understanding of DHTs before we started any coding.</p>

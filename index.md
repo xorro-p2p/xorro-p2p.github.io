@@ -36,4 +36,10 @@ title: Xorro P2P
 
 <hr />
 
+{% include story-system-arch.html %}
+
+<hr />
+
 {% include story-future-work.html %}
+
+

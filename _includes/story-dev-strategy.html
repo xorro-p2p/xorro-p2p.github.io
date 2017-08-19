@@ -1,4 +1,4 @@
-<h2>Development Strategy: Simulating and Scaling a Network Application From a Local Environment to a Real Network</h2>
+<h2 id='dev_strategy'>Development Strategy: Simulating and Scaling a Network Application From a Local Environment to a Real Network</h2>
   <h3>Phase 1: Test Mode</h3>
 
   <p>So.. how did we go about building and testing this?</p>
@@ -61,7 +61,7 @@
   <ul>
     <li>If we are working in a local environment only - all nodes broadcast from 'localhost' at different TCP ports.</li>
     <li>If a node is directly on the internet, it should broadcast its own public IP and port.</li>
-    <li>If a node a node has a fully qualified domain name, the node should broadcast that instead of a numeric IP address.</li>
+    <li>If a node has a fully qualified domain name, the node should broadcast that instead of a numeric IP address.</li>
     <li>If a node is behind a firewall that is configured properly for NAT translation/and port forwarding, it can still rely on its public IP and port.</li>
     <li>If a node is behind a firewall that does not have ports forwarded, it needs to either:
       <ul>
@@ -75,20 +75,6 @@
     </li>
   </ul>
 
-  <p>We identified a number of configuration variables that a node might have, and created environtment variables to represent these options.  Our node instantiation code reacts to these environment variables, and we crafted a series of BASH scripts to standardize these configurations for each environment we were working in: test, local, lan, WAN, etc.</p>
+  <p>We identified a number of configurations that a node might have, and created environment variables to represent these options.  Our node instantiation code reacts to these environment variables, and we crafted a series of BASH scripts to standardize these configurations for each environment we were working in: test, local, lan, WAN, etc.</p>
 
   <img src="public/images/launch_scripts.png" alt="">
-
-  <h3>System Architecture</h3>
-  <p>Our final system architecture looks like this:</p>
-  <img src="public/images/system_arch.png" alt="">
-  <p>The top level object is XorroNode, which is a modular Sinatra application</p>
-  <p>Each XorroNode contains:</p>
-  <ul>
-    <li>
-      a single Kademlia Node, responsible for maintaining its own routing table and DHT
-    </li>
-    <li>A network adapter for initiating RPC calls to other nodes.</li>
-    <li>A Sinatra endpoint for receiving RPC from other nodes, web UI, and file transport.</li>
-    <li>File Utilities for file ingest, sharding, and manifest creation.</li>
-  </ul>
