@@ -28,7 +28,7 @@ title: Xorro P2P
 
 <hr />
 
-{% include story-file-sharding.html %}
+{% include story-file-sharding.md %}
 
 <hr>
 
