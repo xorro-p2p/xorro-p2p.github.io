@@ -6,7 +6,7 @@
     In the early stages of our project, we needed to test inter-node communications, but all we had were our classes and test suites, there was no network, no RPC transport, not even multiple computers.
   </p>
   <p>
-    It was fairly common for us to fire up IRB, instantiate a few nodes, and get them communicating manually.  Of course this could be scripted, but it breaks down quickly once a true network environment is introduced and node objects aren't directly available in the same Ruby process.
+    It was fairly common for us to fire up Ruby's interactive shell (IRB), instantiate a few nodes, and get them communicating manually.  Of course this could be scripted, but it breaks down quickly once a true network environment is introduced and node objects aren't directly available in the same Ruby process.
   </p>
   <p>
      We needed some sort of proxy object that would function one way during testing and local development, and another way when deployed in a real network environment.
@@ -14,33 +14,33 @@
   
   <p>Our solution was to have each node delegate all network communications to a pre-existing Network Adapter object.</p>
 
-  <p>When testing, this Network Adapter would actually be a ‘Fake Network Adapter’ -- essentially an array of other nodes, with some methods for lookup and RPC proxy. This allowed us to test our node interactions in a local sandbox without an RPC transport protocol.</p>
+  <p>When testing, this Network Adapter would actually be a ‘Fake Network Adapter’ &mdash; essentially an array of other nodes, with some methods for lookup and RPC proxy. This allowed us to test our node interactions in a local sandbox without an RPC transport protocol.</p>
 
   <p>The typical workflow would look something like the diagram below.<p>
   <img src="public/images/strategy1.png" alt="">
   
   <ul>
     <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - IP, IP and Port.</li>
-    <li>Network looks up if Node B exists. -- in Fake network environment this is done by ID from contact.</li>
+    <li>Network looks up if Node B exists &mdash; in Fake Network environment this is done by ID from contact.</li>
     <li>Network directly calls method on Node B, which changes state and/or returns some data in response.</li>
-    <li>Network delivers that response back to Node A, which in turn changes state or reacts to this new information</li>
+    <li>Network delivers that response back to Node A, which in turn changes state or reacts to this new information.</li>
   </ul>
     
   <h3>Phase 2: RPC via HTTP in a Local Sandbox</h3>
   <p>Our next step was to introduce HTTP as the underlying protocol upon which we built our RPC methods.</p>
-  <p>To do this, we implemented a Real Network Adapter object. It has the same interface as our Fake Network Adapter, but instead of looking up the recipient node by ID and calling the method directly, the Real Network Adapter crafts an HTTP Post request from the IP/Port listed in the contact info provided, and the route corresponding to the RPC call, possibly including relevant data in the request body -- contact info of the requester, query info, etc.<p>
+  <p>To do this, we implemented a Real Network Adapter object. It has the same interface as our Fake Network Adapter, but instead of looking up the recipient node by ID and calling the method directly, the Real Network Adapter crafts an HTTP Post request from the IP/Port listed in the contact info provided and the route corresponding to the RPC call, possibly including relevant data in the request body &mdash; contact info of the requester, query info, etc.<p>
 
 
   <p>The typical workflow is similar to the previous slide:</p>
   <img src="public/images/strategy2.png" alt="">
   <ul>
     <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - IP, IP and Port.</li>
-    <li>Network crafts an HTTP POST request for the IP, PORT, and RPC path, and sends it along with any payload data</li>
-    <li>HTTP endpoint of recipient node receives POST request, and it calls the receive rpc method on the Node object</li>
-    <li>The return value of this recieve RPC method is converted to an HTTP response by the HTTP endpoint, and sent back to the network adapter of the calling Node</li>
+    <li>Network crafts an HTTP POST request for the IP, PORT, and RPC path, and sends it along with any payload data.</li>
+    <li>HTTP endpoint of recipient node receives POST request, and it calls the receive RPC method on the Node object.</li>
+    <li>The return value of this receivve RPC method is converted to an HTTP response by the HTTP endpoint, and sent back to the network adapter of the calling Node.</li>
     <li>The Network receives the response, and delivers it to Node A, which in turn changes state or reacts to this new information.</li>
   </ul>
-  <p>As you can see, from the perspective of the Nodes, nothing has changed, each of them send and receive the same information, but the Network Object and HTTP endpoints abstract away the internode communications.</p>
+  <p>As you can see, from the perspective of the Nodes, nothing has changed &mdash; each of them send and receive the same information, but the Network Object and HTTP endpoints abstract away the internode communications.</p>
 
   <h3>Phase 3: RPC/HTTP Over the Internet</h3>
 

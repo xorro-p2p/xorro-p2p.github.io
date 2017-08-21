@@ -2,16 +2,16 @@
 <p>There are four primitive remote procedure calls that Kademlia nodes send and respond to.</p>
 
 <h4>PING</h4>
-<p>Much like an ICMP Ping, this is used to verify that another node is still alive.</p>
+<p>Much like an Internet Control Message Protocol (ICMP) Ping, this is used to verify that another node is still alive.</p>
 
 <h4>FIND NODE</h4>
 <p>This RPC is sent with a specific node ID to be found. The recipient of this RPC looks in its own routing table and returns a set of contacts that are closest to the ID that is being looked up.</p>
 
 <h4>FIND VALUE</h4>
-<p>This RPC is send with a specific file ID to be located. If the receiving node finds this ID in its own DHT segment, it will return the corresponding value (URL). If not, the recipient node returns a list of contacts that are closest to the file ID.</p>
+<p>This RPC is sent with a specific file ID to be located. If the receiving node finds this ID in its own DHT segment, it will return the corresponding value (URL). If not, the recipient node returns a list of contacts that are closest to the file ID.</p>
 
 <h4>STORE</h4>
-<p>This RPC is used to store a key/value pair (file_id/location) into the DHT segment of the recipient node.</p>
+<p>This RPC is used to store a key/value pair (file_id/location) in the DHT segment of the recipient node.</p>
 <p>Upon each successful RPC, both the sending and receiving node insert or update each other’s contact info in their own routing tables.</p>
 
 <h3>Finding Peers and Files</h3>
@@ -22,7 +22,7 @@
   <li>They could ask their friends who are <b>more related to</b> the target person. Perhaps these friends work in the same industry or live in the same city as the target.</li>
   <li>If one of these friends knows the target, that friend can provide the target's contact info, and the lookup is complete.</li>
   <li>If these friends don't know the target, they could each instead provide contact information for other people who are even closer to the target.</li>
-  <li>This new set of contacts can then be queried, and the process is repeated until the target is found, or the until a some failure condition is reached.</li>
+  <li>This new set of contacts can then be queried, and the process is repeated until the target is found, or the until some failure condition is reached.</li>
 </ol>
 
 <p>Kademlia nodes follow a similar pattern when conducting lookups.</p>
@@ -33,30 +33,30 @@
 
 <h3>Calculating Closeness</h3>
 
-<p>Kademlia defines the distance between nodes as the bitwise exclusive or (XOR) of the nodes' IDs. The xor operation compares two inputs: If these inputs are the same, the result is false(0), if they inputs are different, the result is true(1).  The XOR of two numbers is calculated by finding the XOR of each bit in the binary representation of those two numbers.</p>
+<p>Kademlia defines the distance between nodes as the bitwise exclusive or (XOR) of the nodes' IDs. The xor operation compares two inputs: If these inputs are the same, the result is false (0), if they inputs are different, the result is true (1).  The XOR of two numbers is calculated by finding the XOR of each bit in the binary representation of those two numbers.</p>
 
-<p>As an example, the diagram below assumes node id of 11 in a 4 bit key space (only 0-15 are possible). We calculate the XOR of 11 with a few other IDs to demonstrate the concept.</p>
+<p>As an example, the diagram below assumes node id of 11 in a 4 bit key space (only IDs of 0-15 are possible). We calculate the XOR of 11 with a few other IDs to demonstrate the concept.</p>
 
 <img src="public/images/xor_distance.png" alt="XOR distance">
 
-<p>In the first case, we calculate 11 XOR 10.  The first three bits in both IDs are same, and only the last bit is different. The result of 11 XOR 10 = 1</p>
+<p>In the first case, we calculate 11 XOR 10.  The first three bits in both IDs are the same, and only the last bit is different. The result of 11 XOR 10 is 0001 in binary, or 1 in decimal.</p>
 
-<p>Next we calculate 11 XOR 12. Here, only the first bit is the same, all others are different. The result of 11 XOR 12 is 111 in binary, or 7 in decimal.</p>
-<p>Our last example we calculate 11 XOR 4. Here all bits are different, resulting in 1111 binary, 15 in decimal.</p>
+<p>Next we calculate 11 XOR 12. Here, only the first bit is the same while all others are different. The result of 11 XOR 12 is 0111 in binary, or 7 in decimal.</p>
+<p>Our last example calculates 11 XOR 4. Here all bits are different, resulting in 1111 in binary, 15 in decimal.</p>
 
-<p>From these results you'll notice a important feature of a Kademlia's XOR metric:  If the binary representation of a node’s id shares a <b>larger common pre-fix</b> with the current node, the resulting XOR is smaller.</p>
+<p>From these results you'll notice an important feature of a Kademlia's XOR metric:  if the binary representation of a node’s id shares a <b>larger common pre-fix</b> with the current node, the resulting XOR is smaller.</p>
 
 
 <h3>Kademlia network and routing table</h3>
 
-<p>Each node in the Kademlia can be thought of as a leaf in a binary tree. Below we map out all possible IDs in a 4 bit keyspace: 0-15, each left child adds a '0' at the bit corresponding to that child's depth, each right child adds a '1'.</p>
+<p>Each node in the Kademlia can be thought of as a leaf in a binary tree. Below we map out all possible IDs in a 4 bit keyspace: 0-15, where each left child adds a '0' at the bit corresponding to that child's depth and each right child adds a '1'.</p>
 <img src="public/images/kademlia_network_structure.png" alt="Tree structure of the network">
 
 <p>The most important feature of a binary tree related to a Kademlia network is the O(log n) lookup time. If we want to look up a node or file in this network, it is a very efficient procedure.</p>
 
-<p>As mentioned earlier - a routing table groups contacts into buckets, each bucket containing contacts of a certain distance. That distance is 'shared bit length', which is obtained by calculating the XOR of the contact's ID with the current node's id.</p>
+<p>As mentioned earlier &mdash; a routing table groups contacts into buckets, each bucket containing contacts of a certain distance. That distance is the 'shared bit length', which is obtained by calculating the XOR of the contact's ID with the current node's id.</p>
 
-<p>Below we see how those buckets would be organized in a node whose ID is 11 in a 4 bit keyspace.  Nodes whose IDs share a 3 bit prefix with the current node go in one bucket, 2 shared bits: a different bucket, etc.</p>
+<p>Below we see how those buckets would be organized in a node whose ID is 11 in a 4 bit keyspace.  Nodes whose IDs share a 3 bit prefix with the current node go in one bucket, 2 shared bits in a different bucket, etc.</p>
 <img src="public/images/kademlia_routing_table_in_tree.png" alt="Categorized of contacts in tree">
 
 <!-- <h3>Xor Distance Code Examples</h3>
