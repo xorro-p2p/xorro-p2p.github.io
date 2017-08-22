@@ -20,7 +20,7 @@
   <img src="public/images/strategy1.png" alt="">
   
   <ul>
-    <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - IP, IP and Port.</li>
+    <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - ID, IP and Port.</li>
     <li>Network looks up if Node B exists &mdash; in Fake Network environment this is done by ID from contact.</li>
     <li>Network directly calls method on Node B, which changes state and/or returns some data in response.</li>
     <li>Network delivers that response back to Node A, which in turn changes state or reacts to this new information.</li>
@@ -34,10 +34,10 @@
   <p>The typical workflow is similar to the previous slide:</p>
   <img src="public/images/strategy2.png" alt="">
   <ul>
-    <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - IP, IP and Port.</li>
+    <li>Node A asks the network to deliver an RPC to Node B, Node A provides the contact info - ID, IP and Port.</li>
     <li>Network crafts an HTTP POST request for the IP, PORT, and RPC path, and sends it along with any payload data.</li>
     <li>HTTP endpoint of recipient node receives POST request, and it calls the receive RPC method on the Node object.</li>
-    <li>The return value of this receivve RPC method is converted to an HTTP response by the HTTP endpoint, and sent back to the network adapter of the calling Node.</li>
+    <li>The return value of this receive RPC method is converted to an HTTP response by the HTTP endpoint, and sent back to the network adapter of the calling Node.</li>
     <li>The Network receives the response, and delivers it to Node A, which in turn changes state or reacts to this new information.</li>
   </ul>
   <p>As you can see, from the perspective of the Nodes, nothing has changed &mdash; each of them send and receive the same information, but the Network Object and HTTP endpoints abstract away the internode communications.</p>
