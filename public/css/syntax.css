@@ -63,3 +63,8 @@
 .css .o,
 .css .o + .nt,
 .css .nt + .nt { color: #999; }
+
+.link-to-language {
+  float: right;
+  margin: 0 20px 0 0;
+}

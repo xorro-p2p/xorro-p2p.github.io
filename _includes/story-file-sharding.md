@@ -1,4 +1,4 @@
-<h2>File Sharding and Retreival</h2>
+<h2 id="file_sharding">File Sharding and Retreival</h2>
 <p>File sharding is the process of chopping up a file into smaller pieces, naming the pieces, and documenting the files/names in a manifest file such that they can be retreived and reassembled in the appropriate order.</p>
 
 <p>Sharding improves distribution and reliability of a P2P network, as multiple nodes can store some or all shards of a shared file. If a node containing download information for a shard goes offline, the shard info can be retrieved from a different source.</p>

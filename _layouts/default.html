@@ -11,6 +11,13 @@
          content to avoid any CSS collisions with our real content. -->
     <div class="wrap">
       <div class="masthead">
+        <div class="link-to-language">
+          {% if page.url == '/' %} 
+            <a class="link-to-chinese" href="/zh-tw">Chinese</a>
+          {% elsif page.url == '/zh-tw/' %}
+            <a class="link-to-default" href="/">English</a>
+          {% endif %}
+        </div>
         <div class="container">
           <h3 class="masthead-title">
             <a href="{{ site.baseurl }}/" title="Home">{{ site.title }}</a>
