@@ -42,4 +42,9 @@ title: Xorro P2P
 
 {% include story-future-work.html %}
 
+<hr>
+
+{% include story-conclusion.html %}
+{% include team.html %}
+
 

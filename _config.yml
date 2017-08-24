@@ -6,8 +6,8 @@ permalink:           /:title/
 
 # Setup
 title:               Xorro P2P
-tagline:             'An exercise in building a mini BitTorrent P2P network from scratch'
-description:         'An exercise in building a mini BitTorrent P2P network from scratch'
+tagline:             'How we built a BitTorrent-like P2P network from scratch'
+description:         'How we built a BitTorrent-like P2P network from scratch'
 url:                 'http://xorro-p2p.github.io'
 baseurl:             ''
 
