@@ -49,12 +49,12 @@
 
 <h3>Kademlia network and routing table</h3>
 
-<p>Each node in the Kademlia can be thought of as a leaf in a binary tree. Below we map out all possible IDs in a 4 bit keyspace: 0-15, where each left child adds a '0' at the bit corresponding to that child's depth and each right child adds a '1'.</p>
+<p>Each node in Kademlia can be thought of as a leaf in a binary tree. Below we map out all possible IDs in a 4 bit keyspace: 0-15, where each left child adds a '0' at the bit corresponding to that child's depth and each right child adds a '1'.</p>
 <img src="public/images/kademlia_network_structure.png" alt="Tree structure of the network">
 
-<p>The most important feature of a binary tree related to a Kademlia network is the O(log n) lookup time. If we want to look up a node or file in this network, it is a very efficient procedure.</p>
+<p>The most important feature of a binary tree related to a Kademlia network is the O(log n) lookup time. Looking up a node or file in this network is a very efficient procedure.</p>
 
-<p>As mentioned earlier &mdash; a routing table groups contacts into buckets, each bucket containing contacts of a certain distance. That distance is the 'shared bit length', which is obtained by calculating the XOR of the contact's ID with the current node's id.</p>
+<p>As mentioned earlier &mdash; a routing table groups contacts into buckets with each bucket containing contacts of a certain distance. That distance is the 'shared bit length', which is obtained by calculating the XOR of the contact's ID with the current node's ID.</p>
 
 <p>Below we see how those buckets would be organized in a node whose ID is 11 in a 4 bit keyspace.  Nodes whose IDs share a 3 bit prefix with the current node go in one bucket, 2 shared bits in a different bucket, etc.</p>
 <img src="public/images/kademlia_routing_table_in_tree.png" alt="Categorized of contacts in tree">
