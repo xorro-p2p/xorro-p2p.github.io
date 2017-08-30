@@ -1,7 +1,7 @@
 <h2 id='dht'>Implementing a Distributed Hash Table</h2>
-  <p>Our research uncovered several distributed hash table models to consider for our application: Chord, Pastry, Apache Cassandra, Kademlia... each with their own pros and cons. We ultimately decided on Kademlia due to its prevalence, minimal RPC, and automatic spreading of contact information, among other reasons we will outline shortly.  </p>
+  <p>Our research uncovered several distributed hash table models to consider for our application: Chord, Pastry, Apache Cassandra, Kademlia... each with their own pros and cons. We ultimately decided on Kademlia due to its prevalence, minimal remote procedure calls, and automatic spreading of contact information, among other reasons we will outline shortly.  </p>
 
-  <p>Implementation of Kademlia proved to be quite challenging due to the large quantitiy of new concepts: nodes, routing tables, buckets, xor distance, routing algorithms, remote procedure calls… the list seemed endless. There were a few Ruby implementations out there, but we relied only on specifications and white papers because we truly wanted to build out the DHT from scratch.</p>
+  <p>Implementation of Kademlia proved to be quite challenging due to the large quantity of new concepts: nodes, routing tables, buckets, xor distance, routing algorithms, remote procedure calls… the list seemed endless. There were a few Ruby implementations out there, but we relied only on specifications and white papers because we truly wanted to build out the DHT from scratch.</p>
 
   <h3>Kademlia</h3>
   <p>A Kademlia network consists of many Nodes.</p>

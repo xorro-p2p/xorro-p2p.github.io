@@ -19,23 +19,23 @@
 <p>If a person wants to find another person they don't know, they might take the following steps:</p>
 
 <ol>
-  <li>They could ask their friends who are <b>closer</b> the target person. Perhaps these friends work in the same industry or live in the same city as the target.</li>
+  <li>They could ask their friends who are <b>closer</b> to the target person. Perhaps these friends work in the same industry or live in the same city as the target.</li>
   <li>If one of these friends knows the target, that friend can provide the target's contact info, and the lookup is complete.</li>
   <li>If these friends don't know the target, they could each instead provide contact information for other people who are even closer to the target.</li>
-  <li>This new set of contacts can then be queried, and the process is repeated until the target is found, or the until some failure condition is reached.</li>
+  <li>This new set of contacts can then be queried, and the process is repeated until the target is found, or until some failure condition is reached.</li>
 </ol>
 
 <p>Kademlia nodes follow a similar pattern when conducting lookups.</p>
 
-<p>If a node is to retreive a piece of information (a file) from the network, it will send FIND VALUE RPCs to a subset of its own contacts whose IDs are 'closest' to the ID of the file it is looking for.  If any of the recipient nodes have this ID in their DHT segement, they will return the corresponding value, otherwise, they will return a list of contacts that are even closer to the value being queried.</p>
+<p>If a node is to retrieve a piece of information (a file) from the network, it will send FIND VALUE RPCs to a subset of its own contacts whose IDs are 'closest' to the ID of the file it is looking for.  If any of the recipient nodes have this ID in their DHT segment, they will return the corresponding value, otherwise, they will return a list of contacts that are even closer to the value being queried.</p>
 
 <p>The next problem to discuss is how 'closeness' is determined in a Kademlia network.</p>
 
 <h3>Calculating Closeness</h3>
 
-<p>Kademlia defines the distance between nodes as the bitwise exclusive or (XOR) of the nodes' IDs. The xor operation compares two inputs: If these inputs are the same, the result is false (0), if they inputs are different, the result is true (1).  The XOR of two numbers is calculated by finding the XOR of each bit in the binary representation of those two numbers.</p>
+<p>Kademlia defines the distance between nodes as the bitwise exclusive or (XOR) of the nodes' IDs. The xor operation compares two inputs: if these inputs are the same, the result is false (0), if the inputs are different, the result is true (1).  The XOR of two numbers is calculated by finding the XOR of each bit in the binary representation of those two numbers.</p>
 
-<p>As an example, the diagram below assumes node id of 11 in a 4 bit key space (only IDs of 0-15 are possible). We calculate the XOR of 11 with a few other IDs to demonstrate the concept.</p>
+<p>As an example, the diagram below assumes a node ID of 11 in a 4 bit keyspace (only IDs of 0-15 are possible). We calculate the XOR of 11 with a few other IDs to demonstrate the concept.</p>
 
 <img src="public/images/xor_distance.png" alt="XOR distance">
 
@@ -44,7 +44,7 @@
 <p>Next we calculate 11 XOR 12. Here, only the first bit is the same while all others are different. The result of 11 XOR 12 is 0111 in binary, or 7 in decimal.</p>
 <p>Our last example calculates 11 XOR 4. Here all bits are different, resulting in 1111 in binary, 15 in decimal.</p>
 
-<p>From these results you'll notice an important feature of a Kademlia's XOR metric:  if the binary representation of a node’s id shares a <b>larger common pre-fix</b> with the current node, the resulting XOR is smaller.</p>
+<p>From these results you'll notice an important feature of a Kademlia's XOR metric:  if the binary representation of a node’s ID shares a <b>larger common pre-fix</b> with the current node, the resulting XOR is smaller.</p>
 
 
 <h3>Kademlia network and routing table</h3>

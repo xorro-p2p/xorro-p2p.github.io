@@ -1,5 +1,5 @@
-<h2 id="file_sharding">File Sharding and Retreival</h2>
-<p>File sharding is the process of chopping up a file into smaller pieces, naming the pieces, and documenting the files/names in a manifest file such that they can be retreived and reassembled in the appropriate order.</p>
+<h2 id="file_sharding">File Sharding and Retrieval</h2>
+<p>File sharding is the process of chopping up a file into smaller pieces, naming the pieces, and documenting the files/names in a manifest file such that they can be retrieved and reassembled in the appropriate order.</p>
 
 <p>Sharding improves distribution and reliability of a P2P network, as multiple nodes can store some or all shards of a shared file. If a node containing download information for a shard goes offline, the shard info can be retrieved from a different source.</p>
 
@@ -14,7 +14,7 @@
 <ul>
   <li>A shared file is added to the network via drag & drop.</li>
   <li>An ID is created for the file by calculating the SHA1 hash of the file's content.</li>
-  <li>This ID is repurposed as the filename for the manifest file, with a ".xro" extention. This process is transparent to the user, who only needs to be aware of the ID.</li>
+  <li>This ID is repurposed as the filename for the manifest file, with a ".xro" extension. This process is transparent to the user, who only needs to be aware of the ID.</li>
   <li>The original file is sharded into either 1MB chunks, or 50% of the original file size if it is smaller than 1MB.</li>
   <li>Each shard is written to disk - the name of the shard is the SHA1 hash of its content.</li>
   <li>The shards names are written in order to the manifest file, along with the original file name and file size in bytes.</li>
@@ -40,13 +40,13 @@
     ]
   }
 ```
-<p>File retreival is handled similarly:</p>
+<p>File retrieval is handled similarly:</p>
 <ul>
-  <li>A user enters the ID of the file they want to retreive from the network. This ID is the hash of the file's content, and also happens to be the name of the manifest file they retreive first.</li>
-  <li>The manifest file is retreived from the network by issuing FIND VALUE RPC's to peer nodes closest to the ID of the manifest.</li>
+  <li>A user enters the ID of the file they want to retrieve from the network. This ID is the hash of the file's content, and also happens to be the name of the manifest file they retrieve first.</li>
+  <li>The manifest file is retrieved from the network by issuing FIND VALUE RPCs to peer nodes closest to the ID of the manifest.</li>
   <li>Once the manifest is downloaded, the node repeats the lookup and download process (FIND VALUE RPC) for each shard documented in the manifest.</li>
   <li>After all shards have been downloaded, they are reassembled into the original file.</li>
-  <li>The node then broadcast location info for its newly acquired shards and manifest to peer nodes closest to the respective IDs of the files.</li>
+  <li>The node then broadcasts location info for its newly acquired shards and manifest to peer nodes closest to the respective IDs of the files.</li>
 </ul>
 
 <figure>
